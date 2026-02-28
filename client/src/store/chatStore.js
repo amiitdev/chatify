@@ -10,7 +10,7 @@ import {
 } from '../utils/storage';
 
 // Create socket outside store (singleton)
-const socket = io('http://localhost:3000', {
+const socket = io(import.meta.env.VITE_BACKEND_URL, {
   autoConnect: true,
   reconnection: true,
   reconnectionAttempts: 5,

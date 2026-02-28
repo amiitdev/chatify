@@ -1,0 +1,51 @@
+# =========================
+# Node Modules
+# =========================
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# =========================
+# Environment Files
+# =========================
+.env
+.env.*
+client/.env
+client/.env.*
+server/.env
+server/.env.*
+
+# =========================
+# Logs
+# =========================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Vite / Build Output
+# =========================
+dist/
+client/dist/
+build/
+.vercel/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Editor Files
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Cache
+# =========================
+.cache/
+.parcel-cache/
