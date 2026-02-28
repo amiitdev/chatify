@@ -1141,3 +1141,212 @@ body {
 * {
   -webkit-tap-highlight-color: transparent;
 }
+
+/* Add these fixes to your App.css - ensure they come after your existing styles */
+
+/* Fix for mobile header - ensure it's visible and properly positioned */
+.mobile-header {
+  display: none;
+  align-items: center;
+  padding: 12px 16px;
+  background: #1a1a24;
+  border-bottom: 1px solid #2c2c38;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100; /* Increased z-index */
+  width: 100%;
+  height: 60px; /* Fixed height */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Hamburger button - ensure it's visible and clickable */
+.mobile-header .hamburger {
+  display: flex !important; /* Force display */
+  align-items: center;
+  justify-content: center;
+  background: #6b4eff; /* Add background to make it visible */
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  color: white;
+  padding: 8px;
+  margin: 0;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(107, 78, 255, 0.3);
+}
+
+.mobile-header .hamburger:hover {
+  background: #7b5fff;
+}
+
+.mobile-header .hamburger svg {
+  width: 24px;
+  height: 24px;
+  stroke: white;
+}
+
+/* Mobile header user name */
+.mobile-header .user-name {
+  background: #262630;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: #6b4eff;
+  border: 1px solid #363642;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  margin-left: auto;
+}
+
+/* Mobile header logout button */
+.mobile-header .logout-button {
+  background: none;
+  border: none;
+  color: #ff4e4e;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.mobile-header .logout-button:hover {
+  background: rgba(255, 78, 78, 0.1);
+}
+
+/* Ensure the main content area has proper padding top on mobile */
+@media (max-width: 768px) {
+  /* Show mobile header */
+  .mobile-header {
+    display: flex;
+  }
+
+  /* Adjust main content to account for fixed header */
+  .chat-main {
+    padding-top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Message list should take remaining space */
+  .message-list-container {
+    flex: 1;
+    height: auto;
+    padding-bottom: 80px; /* Space for chat box */
+  }
+
+  /* Chat box should be fixed at bottom */
+  .chat-box-container {
+    position: sticky;
+    bottom: 0;
+    background: #1a1a24;
+    z-index: 50;
+    border-top: 1px solid #2c2c38;
+    padding: 12px 16px;
+  }
+
+  /* Ensure the typing indicator is visible */
+  .typing-indicator {
+    padding: 8px 16px;
+    background: #1a1a24;
+    border-top: 1px solid #2c2c38;
+  }
+
+  /* Fix for the mobile header when menu is open */
+  body.menu-open .mobile-header {
+    z-index: 1001;
+  }
+
+  /* Ensure hamburger button is always on top */
+  .mobile-header .hamburger {
+    z-index: 1002;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .mobile-header {
+    padding: 8px 12px;
+    height: 56px;
+  }
+
+  .mobile-header .hamburger {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mobile-header .hamburger svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobile-header .user-name {
+    max-width: 100px;
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .mobile-header .logout-button {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+}
+
+/* Fix for the menu overlay */
+.menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+}
+
+.menu-overlay.active {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Ensure sidebar appears above overlay */
+.sidebar {
+  z-index: 1000;
+}
+
+/* Fix for the sidebar when open on mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
