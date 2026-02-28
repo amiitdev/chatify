@@ -1094,3 +1094,50 @@ body {
     transform: translateY(0);
   }
 }
+
+/* App.css - Add these styles */
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: #0f0f13;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .app-container {
+    position: relative;
+  }
+
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* Ensure ChatBox and MessageList take full width */
+  .chat-box-container,
+  .message-list-container {
+    width: 100%;
+  }
+
+  /* Prevent body scroll when menu is open */
+  body.menu-open {
+    overflow: hidden;
+  }
+}
+
+/* Ensure smooth transitions */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
