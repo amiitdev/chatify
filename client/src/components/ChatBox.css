@@ -1,0 +1,451 @@
+/* Add these styles to your App.css or create a ChatBox.css */
+
+/* ChatBox Styles */
+.chat-box-container {
+  background: #1a1a24;
+  border-top: 1px solid #2c2c38;
+  padding: 20px 24px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.chat-box-wrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.chat-input-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.chat-input {
+  width: 100%;
+  background: #262630;
+  border: 2px solid #363642;
+  border-radius: 28px;
+  padding: 14px 20px;
+  padding-right: 50px;
+  font-size: 15px;
+  color: #e4e6eb;
+  outline: none;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.chat-input:focus {
+  border-color: #6b4eff;
+  background: #2c2c38;
+  box-shadow: 0 0 0 3px rgba(107, 78, 255, 0.15);
+}
+
+.chat-input:disabled {
+  background: #1e1e28;
+  border-color: #2c2c38;
+  color: #6b6b7c;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.chat-input::placeholder {
+  color: #6b6b7c;
+  font-size: 14px;
+}
+
+.typing-indicator-dot {
+  position: absolute;
+  right: 20px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00c853;
+  animation: typingPulse 1.5s ease infinite;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.typing-indicator-dot.visible {
+  opacity: 1;
+}
+
+.chat-send-button {
+  background: #6b4eff;
+  border: none;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(107, 78, 255, 0.3);
+  color: white;
+  font-size: 20px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-send-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.3s ease,
+    height 0.3s ease;
+}
+
+.chat-send-button:hover:not(:disabled) {
+  background: #7b5fff;
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(107, 78, 255, 0.4);
+}
+
+.chat-send-button:hover:not(:disabled)::before {
+  width: 100px;
+  height: 100px;
+}
+
+.chat-send-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.chat-send-button:disabled {
+  background: #363642;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.5;
+}
+
+.chat-send-button svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s ease;
+}
+
+.chat-send-button:hover:not(:disabled) svg {
+  transform: translateX(2px);
+}
+
+/* Message character count */
+.message-count {
+  position: absolute;
+  right: 24px;
+  bottom: -18px;
+  font-size: 11px;
+  color: #6b6b7c;
+  background: #1a1a24;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid #2c2c38;
+}
+
+/* No user selected message */
+.no-user-selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #9b9bb5;
+  font-size: 14px;
+  padding: 20px;
+  background: #1a1a24;
+  border-top: 1px solid #2c2c38;
+}
+
+.no-user-selected svg {
+  opacity: 0.5;
+}
+
+/* Animations */
+@keyframes typingPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Send icon animation */
+@keyframes sendIconPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .chat-box-container {
+    padding: 16px;
+  }
+
+  .chat-send-button {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+
+  .chat-input {
+    padding: 12px 16px;
+    padding-right: 40px;
+    font-size: 14px;
+  }
+}
+
+/* Optional: Add a subtle glow effect when typing */
+.chat-input.typing-active {
+  border-color: #6b4eff;
+  animation: inputGlow 1.5s ease infinite;
+}
+
+@keyframes inputGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(107, 78, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(107, 78, 255, 0.2);
+  }
+}
+
+/* Add to ChatBox.css */
+
+.image-preview-container {
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.image-preview-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.image-preview-name {
+  font-size: 12px;
+  color: #666;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remove-image-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 0, 0, 0.1);
+  border: none;
+  color: #f00;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.remove-image-btn:hover:not(:disabled) {
+  background: rgba(255, 0, 0, 0.2);
+}
+
+.remove-image-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.remove-image-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.image-upload-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+  margin-right: 5px;
+}
+
+.image-upload-btn:hover:not(:disabled) {
+  background: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+.image-upload-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.image-upload-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.chat-input-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background: white;
+  border-radius: 20px;
+  padding: 0 10px;
+  border: 1px solid #ddd;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .image-preview-container {
+    background: #2a2a2a;
+  }
+
+  .image-preview-name {
+    color: #aaa;
+  }
+
+  .image-upload-btn {
+    color: #aaa;
+  }
+
+  .image-upload-btn:hover:not(:disabled) {
+    background: rgba(0, 123, 255, 0.2);
+    color: #4da3ff;
+  }
+
+  .chat-input-wrapper {
+    background: #2a2a2a;
+    border-color: #444;
+  }
+}
+
+/* Add to your ChatBox.css */
+
+.image-preview-container {
+  position: relative;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.image-preview-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.image-preview-name {
+  flex: 1;
+  font-size: 14px;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remove-image-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-image-btn:hover {
+  color: #dc3545;
+}
+
+.remove-image-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.remove-image-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.upload-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.upload-progress-bar {
+  height: 100%;
+  background: #007bff;
+  transition: width 0.3s ease;
+}
+
+.upload-progress-text {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  font-size: 11px;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.chat-send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.image-upload-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

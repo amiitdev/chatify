@@ -1,0 +1,271 @@
+/* Add these styles to your App.css or create a TypingIndicator.css */
+
+/* Typing Indicator Container */
+.typing-indicator-container {
+  padding: 8px 24px;
+  background: linear-gradient(to right, transparent, #1a1a24, transparent);
+  border-top: 1px solid #2c2c38;
+  border-bottom: 1px solid #2c2c38;
+  animation: slideDown 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Typing Indicator Content */
+.typing-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Typing Avatar */
+.typing-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6b4eff, #9b7fff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(107, 78, 255, 0.3);
+  animation: avatarPulse 2s ease infinite;
+}
+
+/* Typing Info */
+.typing-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.typing-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b4eff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.typing-text {
+  font-size: 14px;
+  color: #9b9bb5;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Typing Dots Animation */
+.typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 4px;
+}
+
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  background: #6b4eff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: typingBounce 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.typing-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+.typing-dots span:nth-child(3) {
+  animation-delay: 0;
+}
+
+/* Gradient background animation */
+.typing-indicator-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(107, 78, 255, 0.1),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* Compact version (for mobile or smaller screens) */
+.typing-indicator-compact {
+  padding: 6px 16px;
+  background: #1a1a24;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.typing-indicator-compact .typing-dots span {
+  width: 5px;
+  height: 5px;
+  background: #9b9bb5;
+}
+
+/* Multiple typing users */
+.typing-multiple {
+  background: #262630;
+  border-radius: 24px;
+  padding: 12px 20px;
+  border: 1px solid #363642;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.typing-multiple .typing-users-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.typing-user-chip {
+  background: #1a1a24;
+  border-radius: 16px;
+  padding: 4px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #e4e6eb;
+  border: 1px solid #363642;
+}
+
+.typing-user-chip .user-dot {
+  width: 8px;
+  height: 8px;
+  background: #00c853;
+  border-radius: 50%;
+}
+
+/* Animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typingBounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes avatarPulse {
+  0%,
+  100% {
+    box-shadow: 0 2px 8px rgba(107, 78, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 2px 12px rgba(107, 78, 255, 0.6);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .typing-indicator-container {
+    padding: 6px 16px;
+  }
+
+  .typing-name {
+    max-width: 100px;
+    font-size: 13px;
+  }
+
+  .typing-text {
+    font-size: 13px;
+  }
+
+  .typing-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .typing-indicator-container {
+    background: linear-gradient(to right, #0f0f13, #1a1a24, #0f0f13);
+  }
+}
+
+/* Different position variants */
+.typing-indicator-top {
+  border-top: none;
+  border-bottom: 1px solid #2c2c38;
+}
+
+.typing-indicator-bottom {
+  border-top: 1px solid #2c2c38;
+  border-bottom: none;
+}
+
+.typing-indicator-floating {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a24;
+  border-radius: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  border: 1px solid #363642;
+  z-index: 100;
+  padding: 10px 20px;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

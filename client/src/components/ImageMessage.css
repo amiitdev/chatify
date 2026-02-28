@@ -1,0 +1,218 @@
+/* ImageMessage.css */
+.image-message {
+  max-width: 300px;
+  margin: 4px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--message-bubble, #f0f0f0);
+}
+
+.own-image {
+  margin-left: auto;
+}
+
+.other-image {
+  margin-right: auto;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.image-preview {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: block;
+}
+
+.image-preview:hover {
+  transform: scale(1.02);
+}
+
+.image-preview.expanded {
+  max-height: none;
+  cursor: zoom-out;
+}
+
+.image-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 100px;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #ddd;
+  border-top-color: #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.image-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #fee;
+  color: #c00;
+  min-height: 100px;
+}
+
+.image-error svg {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.image-container:hover .image-overlay {
+  opacity: 1;
+}
+
+.image-action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.image-action-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.image-action-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.image-info {
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.file-name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-size {
+  color: #ddd;
+}
+
+/* Expanded view modal */
+.image-expanded-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.image-expanded-container {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.image-expanded {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.close-expanded {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.close-expanded:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.close-expanded svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .image-loading {
+    background: #2a2a2a;
+    color: #fff;
+  }
+
+  .image-error {
+    background: #442222;
+    color: #ff8888;
+  }
+}
