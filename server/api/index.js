@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(cors());
 
 app.get('/', (req, res) => {
@@ -31,18 +32,26 @@ const allowedOrigins = [
 //   },
 // });
 
+// const io = new Server(server, {
+//   cors: {
+//     origin: function (origin, callback) {
+//       // Allow requests with no origin (like Postman or server-to-server)
+//       if (!origin) return callback(null, true);
+
+//       if (allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error('Not allowed by CORS'));
+//       }
+//     },
+//     methods: ['GET', 'POST'],
+//     credentials: true,
+//   },
+// });
+
 const io = new Server(server, {
   cors: {
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like Postman or server-to-server)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: ['http://localhost:5173', 'https://chatify-4vwv.vercel.app'],
     methods: ['GET', 'POST'],
     credentials: true,
   },

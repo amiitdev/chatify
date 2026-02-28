@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 import {
   saveToStorage,
   loadFromStorage,
@@ -8,15 +8,16 @@ import {
   clearSessionData,
   STORAGE_KEYS,
 } from '../utils/storage';
+import { socket } from '../socket';
 
 // Create socket outside store (singleton)
-const socket = io(import.meta.env.VITE_BACKEND_URL, {
-  autoConnect: true,
-  reconnection: true,
-  reconnectionAttempts: 5,
-  reconnectionDelay: 1000,
-  maxHttpBufferSize: 1e7, // Increase buffer size for larger messages (10MB)
-});
+// const socket = io(import.meta.env.VITE_BACKEND_URL, {
+//   autoConnect: true,
+//   reconnection: true,
+//   reconnectionAttempts: 5,
+//   reconnectionDelay: 1000,
+//   maxHttpBufferSize: 1e7, // Increase buffer size for larger messages (10MB)
+// });
 
 // Helper function to generate unique message ID
 const generateMessageId = () => {
