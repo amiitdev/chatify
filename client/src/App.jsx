@@ -503,7 +503,7 @@ const App = () => {
           >
             {isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
           </button>
-          <h2>Chatify</h2>
+          <h2 className="chatify">Chatify</h2>
           <span className="user-name" title={username}>
             {username}
           </span>
@@ -536,7 +536,7 @@ const App = () => {
               <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           </button>
-          <h2>Chat</h2>
+          <h2>Chatify</h2>
           <span className="user-name" title={username}>
             {username}
           </span>

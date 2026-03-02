@@ -1636,11 +1636,11 @@ const ChatBox = ({ isKeyboardOpen, keyboardHeight }) => {
             className={`typing-indicator-dot ${isTyping ? 'visible' : ''}`}
           />
 
-          {message.length > 0 && (
+          {/* {message.length > 0 && (
             <span className="message-count">
               {message.length}/{MAX_MESSAGE_LENGTH}
             </span>
-          )}
+          )} */}
         </div>
 
         <button

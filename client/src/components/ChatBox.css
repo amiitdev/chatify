@@ -1,7 +1,7 @@
 /* ChatBox.css - Stable and Responsive */
 
 .chat-box-container {
-  background: white;
+  background: #111827;
   border-top: 1px solid #e5e7eb;
   padding: 12px 16px;
   position: relative;
@@ -231,7 +231,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: #f9fafb;
+  background: #111827;
   border: 1px solid #e5e7eb;
   border-radius: 24px;
   transition: all 0.2s;
@@ -240,7 +240,7 @@
 
 .chat-input-wrapper:focus-within {
   border-color: #6b4eff;
-  background: white;
+  background: rgb(20, 7, 7);
   box-shadow: 0 0 0 3px rgba(107, 78, 255, 0.1);
 }
 
@@ -251,15 +251,17 @@
   background: transparent;
   padding: 12px 16px;
   font-size: 0.95rem;
-  color: #1f2937;
+  color: #e5e7eb;
   outline: none;
   min-width: 0;
   width: 100%;
   line-height: 1.4;
+  caret-color: #3b82f6;
 }
 
 .chat-input::placeholder {
   color: #9ca3af;
+  transition: color 0.2s ease;
   font-size: 0.9rem;
 }
 
@@ -334,7 +336,7 @@
 /* Message count */
 .message-count {
   position: absolute;
-  right: 100px;
+  right: 60px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 0.7rem;
@@ -419,6 +421,7 @@
 @media (max-width: 768px) {
   .chat-box-container {
     padding: 10px 12px;
+    background: #0f172a;
   }
 
   .chat-input {
@@ -466,6 +469,7 @@
 @media (max-width: 480px) {
   .chat-box-container {
     padding: 8px 10px;
+    background: #0f172a;
   }
 
   .chat-input {
@@ -531,7 +535,7 @@
   .chat-box-container {
     position: sticky;
     bottom: 0;
-    background: white;
+    background: #0f172a;
     z-index: 100;
   }
 }
