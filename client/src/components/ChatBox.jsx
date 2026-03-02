@@ -522,11 +522,580 @@
 
 // export default ChatBox;
 
+// import { useState, useRef, useEffect, useCallback } from 'react';
+// import { useChatStore } from '../store/chatStore';
+// import './ChatBox.css';
+
+// const ChatBox = () => {
+//   const {
+//     sendMessage,
+//     selectedUser,
+//     emitTyping,
+//     emitStopTyping,
+//     replyingTo,
+//     clearReplyingTo,
+//   } = useChatStore();
+
+//   const [message, setMessage] = useState('');
+//   const [isTyping, setIsTyping] = useState(false);
+//   const [charCount, setCharCount] = useState(0);
+//   const [selectedImage, setSelectedImage] = useState(null);
+//   const [imagePreview, setImagePreview] = useState(null);
+//   const [isUploading, setIsUploading] = useState(false);
+//   const [uploadProgress, setUploadProgress] = useState(0);
+//   const [uploadError, setUploadError] = useState(null);
+
+//   const typingTimeoutRef = useRef(null);
+//   const inputRef = useRef(null);
+//   const fileInputRef = useRef(null);
+//   const MAX_MESSAGE_LENGTH = 500;
+//   const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+
+//   // Auto-focus input when user is selected or when replying
+//   useEffect(() => {
+//     if (selectedUser && inputRef.current) {
+//       inputRef.current.focus();
+//     }
+//   }, [selectedUser, replyingTo]);
+
+//   // Cleanup image preview on unmount
+//   useEffect(() => {
+//     return () => {
+//       if (imagePreview && imagePreview.startsWith('blob:')) {
+//         URL.revokeObjectURL(imagePreview);
+//       }
+//       if (typingTimeoutRef.current) {
+//         clearTimeout(typingTimeoutRef.current);
+//         emitStopTyping();
+//       }
+//     };
+//   }, [imagePreview, emitStopTyping]);
+
+//   const handleTyping = useCallback(
+//     (e) => {
+//       const value = e.target.value;
+
+//       if (value.length <= MAX_MESSAGE_LENGTH) {
+//         setMessage(value);
+//         setCharCount(value.length);
+//       }
+
+//       if (!isTyping && value.length > 0) {
+//         setIsTyping(true);
+//         emitTyping();
+//       }
+
+//       if (typingTimeoutRef.current) {
+//         clearTimeout(typingTimeoutRef.current);
+//       }
+
+//       typingTimeoutRef.current = setTimeout(() => {
+//         if (isTyping) {
+//           setIsTyping(false);
+//           emitStopTyping();
+//         }
+//         typingTimeoutRef.current = null;
+//       }, 1000);
+//     },
+//     [isTyping, emitTyping, emitStopTyping],
+//   );
+
+//   const handleImageSelect = (e) => {
+//     const file = e.target.files[0];
+//     if (!file) return;
+
+//     setUploadError(null);
+
+//     // Validate file type
+//     if (!file.type.startsWith('image/')) {
+//       setUploadError('Please select an image file');
+//       return;
+//     }
+
+//     // Validate file size
+//     if (file.size > MAX_IMAGE_SIZE) {
+//       setUploadError(
+//         `Image size should be less than ${MAX_IMAGE_SIZE / (1024 * 1024)}MB`,
+//       );
+//       return;
+//     }
+
+//     // Warn if file is large
+//     if (file.size > 5 * 1024 * 1024) {
+//       const confirmUpload = window.confirm(
+//         `Image size is ${(file.size / (1024 * 1024)).toFixed(1)}MB. ` +
+//           'Large images may take a moment to process. Continue?',
+//       );
+//       if (!confirmUpload) {
+//         if (fileInputRef.current) {
+//           fileInputRef.current.value = '';
+//         }
+//         return;
+//       }
+//     }
+
+//     setSelectedImage(file);
+//     setUploadProgress(0);
+
+//     try {
+//       if (imagePreview && imagePreview.startsWith('blob:')) {
+//         URL.revokeObjectURL(imagePreview);
+//       }
+//       const previewUrl = URL.createObjectURL(file);
+//       setImagePreview(previewUrl);
+//     } catch (error) {
+//       console.error('Error creating preview:', error);
+//       const reader = new FileReader();
+//       reader.onload = (event) => {
+//         setImagePreview(event.target.result);
+//       };
+//       reader.onerror = () => {
+//         setUploadError('Failed to create image preview');
+//       };
+//       reader.readAsDataURL(file);
+//     }
+//   };
+
+//   const compressImage = async (file) => {
+//     if (file.size <= 3 * 1024 * 1024) {
+//       return file;
+//     }
+
+//     return new Promise((resolve, reject) => {
+//       const reader = new FileReader();
+//       reader.onload = (e) => {
+//         const img = new Image();
+//         img.onload = () => {
+//           const canvas = document.createElement('canvas');
+//           let width = img.width;
+//           let height = img.height;
+
+//           const maxDimension = 1600;
+//           let scale = 1;
+
+//           if (width > height && width > maxDimension) {
+//             scale = maxDimension / width;
+//           } else if (height > maxDimension) {
+//             scale = maxDimension / height;
+//           }
+
+//           width = Math.round(width * scale);
+//           height = Math.round(height * scale);
+
+//           canvas.width = width;
+//           canvas.height = height;
+
+//           const ctx = canvas.getContext('2d');
+//           ctx.drawImage(img, 0, 0, width, height);
+
+//           let quality = 0.9;
+//           if (file.size > 8 * 1024 * 1024) quality = 0.7;
+//           else if (file.size > 5 * 1024 * 1024) quality = 0.8;
+
+//           canvas.toBlob(
+//             (blob) => {
+//               if (blob) {
+//                 console.log(
+//                   `Compressed from ${(file.size / (1024 * 1024)).toFixed(1)}MB to ${(blob.size / (1024 * 1024)).toFixed(1)}MB`,
+//                 );
+//                 resolve(new File([blob], file.name, { type: file.type }));
+//               } else {
+//                 resolve(file);
+//               }
+//             },
+//             file.type,
+//             quality,
+//           );
+//         };
+//         img.onerror = () => resolve(file);
+//         img.src = e.target.result;
+//       };
+//       reader.onerror = () => resolve(file);
+//       reader.readAsDataURL(file);
+//     });
+//   };
+
+//   const splitBase64IntoChunks = (base64String, chunkSize = 500000) => {
+//     const chunks = [];
+//     for (let i = 0; i < base64String.length; i += chunkSize) {
+//       chunks.push(base64String.slice(i, i + chunkSize));
+//     }
+//     return chunks;
+//   };
+
+//   const handleSendImage = async () => {
+//     if (!selectedImage || !selectedUser || isUploading) return;
+
+//     setIsUploading(true);
+//     setUploadProgress(0);
+//     setUploadError(null);
+
+//     try {
+//       const imageToSend = await compressImage(selectedImage);
+
+//       const reader = new FileReader();
+
+//       reader.onload = async (event) => {
+//         try {
+//           const base64Data = event.target.result;
+
+//           if (base64Data.length > 1000000) {
+//             console.log('Large image detected, splitting into chunks');
+
+//             const base64Parts = base64Data.split(',');
+//             const mimeType = base64Parts[0].match(/:(.*?);/)[1];
+//             const base64Content = base64Parts[1];
+
+//             const chunks = splitBase64IntoChunks(base64Content);
+
+//             const imageMetadata = {
+//               totalChunks: chunks.length,
+//               fileName: imageToSend.name,
+//               fileSize: imageToSend.size,
+//               mimeType: mimeType,
+//               originalSize: selectedImage.size,
+//               compressedSize: imageToSend.size,
+//             };
+
+//             for (let i = 0; i < chunks.length; i++) {
+//               const progress = Math.round(((i + 1) / chunks.length) * 100);
+//               setUploadProgress(progress);
+
+//               const chunkData = {
+//                 chunkIndex: i,
+//                 totalChunks: chunks.length,
+//                 chunk: chunks[i],
+//                 fileName: imageToSend.name,
+//                 fileSize: imageToSend.size,
+//                 mimeType: mimeType,
+//                 isLastChunk: i === chunks.length - 1,
+//               };
+
+//               sendMessage(
+//                 JSON.stringify(chunkData),
+//                 'image-chunk',
+//                 null,
+//                 replyingTo,
+//               );
+
+//               if (i < chunks.length - 1) {
+//                 await new Promise((resolve) => setTimeout(resolve, 50));
+//               }
+//             }
+
+//             sendMessage(
+//               JSON.stringify(imageMetadata),
+//               'image-metadata',
+//               null,
+//               replyingTo,
+//             );
+//           } else {
+//             const imageData = {
+//               data: base64Data,
+//               fileName: imageToSend.name,
+//               fileSize: imageToSend.size,
+//               mimeType: imageToSend.type,
+//             };
+
+//             sendMessage(base64Data, 'image', imageData, replyingTo);
+//             setUploadProgress(100);
+//           }
+
+//           clearImageSelection();
+//         } catch (error) {
+//           console.error('Error processing image:', error);
+//           setUploadError('Failed to process image');
+//         }
+//       };
+
+//       reader.onerror = () => {
+//         setUploadError('Failed to read image file');
+//       };
+
+//       reader.onprogress = (progressEvent) => {
+//         if (progressEvent.lengthComputable) {
+//           const progress = Math.round(
+//             (progressEvent.loaded / progressEvent.total) * 50,
+//           );
+//           setUploadProgress(progress);
+//         }
+//       };
+
+//       reader.readAsDataURL(imageToSend);
+//     } catch (error) {
+//       console.error('Failed to send image:', error);
+//       setUploadError('Failed to send image. Please try again.');
+//     } finally {
+//       setTimeout(() => {
+//         setIsUploading(false);
+//         setUploadProgress(0);
+//       }, 500);
+//     }
+//   };
+
+//   const clearImageSelection = () => {
+//     setSelectedImage(null);
+//     if (imagePreview && imagePreview.startsWith('blob:')) {
+//       URL.revokeObjectURL(imagePreview);
+//     }
+//     setImagePreview(null);
+//     setUploadProgress(0);
+//     setUploadError(null);
+//     if (fileInputRef.current) {
+//       fileInputRef.current.value = '';
+//     }
+//   };
+
+//   // ========================
+//   // NEW: Clear reply
+//   // ========================
+//   const handleClearReply = () => {
+//     clearReplyingTo();
+//   };
+
+//   const handleSend = useCallback(() => {
+//     const trimmedMessage = message.trim();
+
+//     if (!selectedUser) return;
+
+//     if (selectedImage) {
+//       handleSendImage();
+//     } else if (trimmedMessage) {
+//       // Pass replyingTo to sendMessage
+//       sendMessage(trimmedMessage, 'text', null, replyingTo);
+
+//       setMessage('');
+//       setCharCount(0);
+
+//       if (isTyping) {
+//         setIsTyping(false);
+//         emitStopTyping();
+//       }
+
+//       if (typingTimeoutRef.current) {
+//         clearTimeout(typingTimeoutRef.current);
+//         typingTimeoutRef.current = null;
+//       }
+
+//       inputRef.current?.focus();
+//     }
+//   }, [
+//     message,
+//     selectedUser,
+//     selectedImage,
+//     sendMessage,
+//     isTyping,
+//     emitStopTyping,
+//     replyingTo,
+//   ]);
+
+//   const handleKeyPress = useCallback(
+//     (e) => {
+//       if (e.key === 'Enter' && !e.shiftKey && !selectedImage) {
+//         e.preventDefault();
+//         handleSend();
+//       }
+//     },
+//     [handleSend, selectedImage],
+//   );
+
+//   const removeSelectedImage = () => {
+//     clearImageSelection();
+//   };
+
+//   const getPlaceholderText = () => {
+//     if (!selectedUser) return 'Select a user to start chatting';
+//     if (selectedImage) return 'Add a caption (optional)...';
+//     if (replyingTo) return 'Reply to message...';
+//     return `Message ${selectedUser.username || selectedUser}...`;
+//   };
+
+//   // Icons
+//   const SendIcon = () => (
+//     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+//       <line x1="22" y1="2" x2="11" y2="13"></line>
+//       <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+//     </svg>
+//   );
+
+//   const LockIcon = () => (
+//     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+//       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+//       <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+//     </svg>
+//   );
+
+//   const ImageIcon = () => (
+//     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+//       <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
+//       <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+//       <polyline points="21 15 16 10 5 21"></polyline>
+//     </svg>
+//   );
+
+//   const CloseIcon = () => (
+//     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+//       <line x1="18" y1="6" x2="6" y2="18"></line>
+//       <line x1="6" y1="6" x2="18" y2="18"></line>
+//     </svg>
+//   );
+
+//   const ReplyIcon = () => (
+//     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+//       <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+//     </svg>
+//   );
+
+//   if (!selectedUser) {
+//     return (
+//       <div className="no-user-selected">
+//         <LockIcon />
+//         <span>Select a user to start messaging</span>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="chat-box-container">
+//       {/* Reply Preview */}
+//       {replyingTo && (
+//         <div className="reply-preview-container">
+//           <div className="reply-preview-content">
+//             <ReplyIcon />
+//             <div className="reply-preview-text">
+//               <span className="reply-preview-sender">
+//                 Replying to{' '}
+//                 {replyingTo.from === useChatStore.getState().username
+//                   ? 'yourself'
+//                   : replyingTo.from}
+//               </span>
+//               <span className="reply-preview-message">
+//                 {replyingTo.type === 'image'
+//                   ? '📷 Image'
+//                   : replyingTo.message.substring(0, 100)}
+//                 {replyingTo.message.length > 100 ? '...' : ''}
+//               </span>
+//             </div>
+//           </div>
+//           <button
+//             className="clear-reply-btn"
+//             onClick={handleClearReply}
+//             title="Cancel reply"
+//           >
+//             <CloseIcon />
+//           </button>
+//         </div>
+//       )}
+
+//       {/* Image preview area */}
+//       {imagePreview && (
+//         <div className="image-preview-container">
+//           <img
+//             src={imagePreview}
+//             alt="Preview"
+//             className="image-preview-thumb"
+//           />
+//           <button
+//             className="remove-image-btn"
+//             onClick={removeSelectedImage}
+//             disabled={isUploading}
+//           >
+//             <CloseIcon />
+//           </button>
+//           <div className="image-preview-details">
+//             <span className="image-preview-name">{selectedImage?.name}</span>
+//             <span className="image-preview-size">
+//               ({(selectedImage?.size / (1024 * 1024)).toFixed(1)}MB)
+//             </span>
+//           </div>
+
+//           {/* Upload progress bar */}
+//           {isUploading && (
+//             <div className="upload-progress">
+//               <div
+//                 className="upload-progress-bar"
+//                 style={{ width: `${uploadProgress}%` }}
+//               />
+//               <span className="upload-progress-text">{uploadProgress}%</span>
+//             </div>
+//           )}
+
+//           {/* Upload error */}
+//           {uploadError && <div className="upload-error">{uploadError}</div>}
+//         </div>
+//       )}
+
+//       <div className="chat-box-wrapper">
+//         <div className="chat-input-wrapper">
+//           <input
+//             ref={inputRef}
+//             type="text"
+//             className={`chat-input ${isTyping ? 'typing-active' : ''} ${replyingTo ? 'replying' : ''}`}
+//             value={message}
+//             onChange={handleTyping}
+//             onKeyPress={handleKeyPress}
+//             placeholder={getPlaceholderText()}
+//             disabled={!selectedUser || isUploading}
+//             maxLength={MAX_MESSAGE_LENGTH}
+//             aria-label="Message input"
+//           />
+
+//           {/* Image upload button */}
+//           <button
+//             className={`image-upload-btn ${isUploading ? 'uploading' : ''}`}
+//             onClick={() => fileInputRef.current?.click()}
+//             disabled={!selectedUser || isUploading || selectedImage}
+//             title={selectedImage ? 'Image selected' : 'Send image (up to 10MB)'}
+//           >
+//             <ImageIcon />
+//           </button>
+
+//           <input
+//             ref={fileInputRef}
+//             type="file"
+//             accept="image/jpeg,image/png,image/gif,image/webp"
+//             onChange={handleImageSelect}
+//             style={{ display: 'none' }}
+//           />
+
+//           <span
+//             className={`typing-indicator-dot ${isTyping ? 'visible' : ''}`}
+//           />
+
+//           {message.length > 0 && (
+//             <span className="message-count">
+//               {message.length}/{MAX_MESSAGE_LENGTH}
+//             </span>
+//           )}
+//         </div>
+
+//         <button
+//           className="chat-send-button"
+//           onClick={handleSend}
+//           disabled={
+//             (!message.trim() && !selectedImage) || !selectedUser || isUploading
+//           }
+//           aria-label="Send message"
+//         >
+//           {isUploading ? (
+//             <span className="upload-percentage">{uploadProgress}%</span>
+//           ) : (
+//             <SendIcon />
+//           )}
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ChatBox;
+
+/////////////////mobile responsive////
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useChatStore } from '../store/chatStore';
 import './ChatBox.css';
 
-const ChatBox = () => {
+const ChatBox = ({ isKeyboardOpen, keyboardHeight }) => {
   const {
     sendMessage,
     selectedUser,
@@ -548,17 +1117,30 @@ const ChatBox = () => {
   const typingTimeoutRef = useRef(null);
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
-  const MAX_MESSAGE_LENGTH = 500;
-  const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+  const chatBoxRef = useRef(null);
 
-  // Auto-focus input when user is selected or when replying
+  const MAX_MESSAGE_LENGTH = 500;
+  const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+
+  // Adjust scroll when keyboard opens
+  useEffect(() => {
+    if (isKeyboardOpen && chatBoxRef.current) {
+      // Scroll the message list to show recent messages
+      const messageList = document.querySelector('.message-list-container');
+      if (messageList) {
+        setTimeout(() => {
+          messageList.scrollTop = messageList.scrollHeight;
+        }, 100);
+      }
+    }
+  }, [isKeyboardOpen]);
+
   useEffect(() => {
     if (selectedUser && inputRef.current) {
       inputRef.current.focus();
     }
   }, [selectedUser, replyingTo]);
 
-  // Cleanup image preview on unmount
   useEffect(() => {
     return () => {
       if (imagePreview && imagePreview.startsWith('blob:')) {
@@ -606,13 +1188,11 @@ const ChatBox = () => {
 
     setUploadError(null);
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       setUploadError('Please select an image file');
       return;
     }
 
-    // Validate file size
     if (file.size > MAX_IMAGE_SIZE) {
       setUploadError(
         `Image size should be less than ${MAX_IMAGE_SIZE / (1024 * 1024)}MB`,
@@ -620,7 +1200,6 @@ const ChatBox = () => {
       return;
     }
 
-    // Warn if file is large
     if (file.size > 5 * 1024 * 1024) {
       const confirmUpload = window.confirm(
         `Image size is ${(file.size / (1024 * 1024)).toFixed(1)}MB. ` +
@@ -846,9 +1425,6 @@ const ChatBox = () => {
     }
   };
 
-  // ========================
-  // NEW: Clear reply
-  // ========================
   const handleClearReply = () => {
     clearReplyingTo();
   };
@@ -861,7 +1437,6 @@ const ChatBox = () => {
     if (selectedImage) {
       handleSendImage();
     } else if (trimmedMessage) {
-      // Pass replyingTo to sendMessage
       sendMessage(trimmedMessage, 'text', null, replyingTo);
 
       setMessage('');
@@ -956,8 +1531,11 @@ const ChatBox = () => {
   }
 
   return (
-    <div className="chat-box-container">
-      {/* Reply Preview */}
+    <div
+      className={`chat-box-container ${isKeyboardOpen ? 'keyboard-open' : ''}`}
+      ref={chatBoxRef}
+      style={isKeyboardOpen ? { paddingBottom: '8px' } : {}}
+    >
       {replyingTo && (
         <div className="reply-preview-container">
           <div className="reply-preview-content">
@@ -987,7 +1565,6 @@ const ChatBox = () => {
         </div>
       )}
 
-      {/* Image preview area */}
       {imagePreview && (
         <div className="image-preview-container">
           <img
@@ -1009,7 +1586,6 @@ const ChatBox = () => {
             </span>
           </div>
 
-          {/* Upload progress bar */}
           {isUploading && (
             <div className="upload-progress">
               <div
@@ -1020,7 +1596,6 @@ const ChatBox = () => {
             </div>
           )}
 
-          {/* Upload error */}
           {uploadError && <div className="upload-error">{uploadError}</div>}
         </div>
       )}
@@ -1040,7 +1615,6 @@ const ChatBox = () => {
             aria-label="Message input"
           />
 
-          {/* Image upload button */}
           <button
             className={`image-upload-btn ${isUploading ? 'uploading' : ''}`}
             onClick={() => fileInputRef.current?.click()}
