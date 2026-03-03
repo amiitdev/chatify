@@ -291,7 +291,7 @@ Licensed under the MIT License.
 **Amit Kumar**  
 GitHub: https://github.com/amiitdev  
 Project: https://github.com/amiitdev/chatify  
-Live: https://chatify-zeta-nine.vercel.app  
+Live: https://chatify-4vwv.vercel.app  
 
 ---
 
